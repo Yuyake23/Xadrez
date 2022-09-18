@@ -1,7 +1,12 @@
 package application;
 
+import boardgame.Position;
+
 public class Program {
 	public static void main(String[] args) {
-		System.out.println("Jogo de Xadrez");
+		Position p = new Position(8, 5);
+		
+		System.out.println(p);
+
 	}
 }
