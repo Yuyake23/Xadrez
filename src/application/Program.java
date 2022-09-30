@@ -14,18 +14,22 @@ public class Program {
 		Scanner sc = new Scanner(System.in);
 
 		while (true) {
-			try{
+			try {
 				UI.clearScreen();
 				ChessPosition source, target;
 				ChessPiece capturedPiece;
 				UI.printBoard(chessMatch.getPieces());
-				
+
 				System.out.print("\nOrigem: ");
 				source = UI.readChessPosition(sc);
 				
+				boolean possibleMovies[][] = chessMatch.possibleMovies(source);
+				UI.clearScreen();
+				UI.printBoard(chessMatch.getPieces(), possibleMovies);
+
 				System.out.print("Destino: ");
 				target = UI.readChessPosition(sc);
-				
+
 				capturedPiece = chessMatch.performChessMove(source, target);
 			} catch (ChessException e) {
 				System.out.println(e.getMessage());
