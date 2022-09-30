@@ -3,6 +3,7 @@ package application;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import chess.ChessMatch;
 import chess.ChessPiece;
 import chess.ChessPosition;
 import chess.Color;
@@ -44,6 +45,13 @@ public class UI {
 		}
 	}
 
+	public static void printMatch(ChessMatch chessMatch) {
+		printBoard(chessMatch.getPieces());
+		System.out.println("\nTurn: " + chessMatch.getTurn());
+		System.out.println("Waiting player: " + getUIPieceColor(chessMatch.getCurrentPlayer())
+				+ chessMatch.getCurrentPlayer() + ANSI_RESET);
+	}
+
 	public static void printBoard(ChessPiece[][] pieces) {
 		for (int i = 0; i < pieces.length; i++) {
 			System.out.printf("%d ", 8 - i);
@@ -69,13 +77,17 @@ public class UI {
 	private static void printPiece(ChessPiece piece, boolean highlight) {
 		if (highlight)
 			System.out.print(ANSI_PURPLE_BACKGROUND);
-		
+
 		if (piece == null) {
 			System.out.print('-');
 		} else {
-			System.out.print(piece.getColor() == Color.WHITE ? ANSI_BLUE : ANSI_YELLOW);
+			System.out.print(getUIPieceColor(piece.getColor()));
 			System.out.print(piece);
 		}
 		System.out.print(ANSI_RESET + " ");
+	}
+
+	private static String getUIPieceColor(Color color) {
+		return color == Color.WHITE ? ANSI_BLUE : ANSI_YELLOW;
 	}
 }
