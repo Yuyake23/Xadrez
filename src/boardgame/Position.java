@@ -29,6 +29,11 @@ public class Position {
 		this.row = row;
 		this.column = column;
 	}
+	
+	@Override
+	public Object clone(){
+		return new Position(row, column);
+	}
 
 	@Override
 	public String toString() {
