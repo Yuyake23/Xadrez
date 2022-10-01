@@ -55,6 +55,9 @@ public class UI {
 		System.out.println("\nTurn: " + chessMatch.getTurn());
 		System.out.println("Waiting player: " + getUIPieceColor(chessMatch.getCurrentPlayer())
 				+ chessMatch.getCurrentPlayer() + ANSI_RESET);
+		if(chessMatch.isCheck()) {
+			System.out.println("CHECK!");
+		}
 	}
 
 	public static void printBoard(ChessPiece[][] pieces) {
@@ -103,7 +106,7 @@ public class UI {
 		System.out.println("Black: " + getUIPieceColor(Color.BLACK) + Arrays.toString(blacks.toArray()) + ANSI_RESET);
 	}
 
-	private static String getUIPieceColor(Color color) {
+	public static String getUIPieceColor(Color color) {
 		return color == Color.WHITE ? ANSI_BLUE : ANSI_YELLOW;
 	}
 }
