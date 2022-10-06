@@ -12,14 +12,14 @@ import chess.pieces.King;
 import chess.pieces.Rook;
 
 public class ChessMatch {
-	private Board   board;
-	private int     turn;
-	private Color   currentPlayer;
-	private boolean check;        // is false by default
+	private Board board;
+	private int turn;
+	private Color currentPlayer;
+	private boolean check; // is false by default
 	private boolean checkMate;
 
 	private List<Piece> piecesOnTheBoard = new ArrayList<>();
-	private List<Piece> capturedPieces   = new ArrayList<>();
+	private List<Piece> capturedPieces = new ArrayList<>();
 
 	public ChessMatch() {
 		this.board = new Board(8, 8);
@@ -74,16 +74,17 @@ public class ChessMatch {
 		this.check = testCheck(opponent(currentPlayer));
 		if (this.check)
 			this.checkMate = testCheckMate(opponent(currentPlayer));
-		else
+		if (!this.checkMate)
 			nextTurn();
-
 		return (ChessPiece) capturedPiece;
 	}
 
 	private Piece makeMove(Position source, Position target) {
-		Piece p             = board.removePiece(source);
+		ChessPiece piece = (ChessPiece) board.removePiece(source);
+		piece.increseMoveCount();
 		Piece capturedPiece = board.removePiece(target);
-		board.placePiece(p, target);
+		board.placePiece(piece, target);
+		
 		if (capturedPiece != null) {
 			piecesOnTheBoard.remove(capturedPiece);
 			capturedPieces.add(capturedPiece);
@@ -92,9 +93,10 @@ public class ChessMatch {
 	}
 
 	private void undoMove(Position source, Position target, Piece capturedPiece) {
-		Piece piece = board.removePiece(target);
+		ChessPiece piece = (ChessPiece) board.removePiece(target);
+		piece.decreseMoveCount();
 		board.placePiece(piece, source);
-
+		
 		if (capturedPiece != null) {
 			board.placePiece(capturedPiece, target);
 			this.capturedPieces.remove(capturedPiece);
@@ -136,7 +138,7 @@ public class ChessMatch {
 	}
 
 	private boolean testCheck(Color color) {
-		Position    kingPosition   = king(color).getPosition();
+		Position kingPosition = king(color).getPosition();
 		List<Piece> opponentPieces = piecesOnTheBoard.stream().filter(p -> ((ChessPiece) p).getColor() != color)
 				.collect(Collectors.toList());
 		for (Piece opponentPiece : opponentPieces) {
@@ -158,7 +160,7 @@ public class ChessMatch {
 						Position source = (Position) p.getPosition().clone();
 						Position target = new Position(i, j);
 
-						Piece   capturedPiece  = makeMove(source, target);
+						Piece capturedPiece = makeMove(source, target);
 						boolean remainsInCheck = testCheck(color);
 						undoMove(source, target, capturedPiece);
 						if (!remainsInCheck)
