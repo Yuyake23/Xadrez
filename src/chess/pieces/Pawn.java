@@ -30,7 +30,6 @@ public class Pawn extends ChessPiece {
 		if (!getBoard().thereIsAPiece(p)) {
 			pm[p.getRow()][p.getColumn()] = true;
 			if (this.getMoveCount() == 0) {
-				System.err.println("PRIMEIRO MOVIMENTO");
 				p.setRow(this.position.getRow() + wm * 2);
 				if (!getBoard().thereIsAPiece(p))
 					pm[p.getRow()][p.getColumn()] = true;

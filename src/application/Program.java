@@ -13,15 +13,15 @@ import chess.ChessPosition;
 public class Program {
 	public static void main(String[] args) {
 
-		Scanner          sc             = new Scanner(System.in);
-		ChessMatch       chessMatch     = new ChessMatch();
+		Scanner sc = new Scanner(System.in);
+		ChessMatch chessMatch = new ChessMatch();
 		List<ChessPiece> capturedPieces = new ArrayList<>();
 
 		while (!chessMatch.getCheckMate()) {
 			try {
 				UI.clearScreen();
 				ChessPosition source, target;
-				ChessPiece    capturedPiece;
+				ChessPiece capturedPiece;
 				UI.printMatch(chessMatch, capturedPieces);
 
 				System.out.print("\nOrigem: ");
@@ -34,7 +34,9 @@ public class Program {
 				System.out.print("Destino: ");
 				target = UI.readChessPosition(sc);
 
+				System.out.println("indo fazer movimento");
 				capturedPiece = chessMatch.performChessMove(source, target);
+				System.out.println("movimento feito");
 				if (capturedPiece != null)
 					capturedPieces.add(capturedPiece);
 			} catch (ChessException e) {
