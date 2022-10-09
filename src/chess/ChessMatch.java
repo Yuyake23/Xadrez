@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import application.Program;
 import application.UI;
 import boardgame.Board;
 import boardgame.Piece;
@@ -98,11 +99,10 @@ public class ChessMatch {
 			// #specialmove promotion
 			if (target.getRow() == 0 || target.getRow() == 7) {
 				this.promoted = movedPiece;
-//				this.promoted = replacePromotedPiece("Q");
-				return (ChessPiece) capturedPiece;
+				Program.chosePieceType(); // I don´t like it
 			}
 		}
-
+		
 		this.check = testCheck(opponent(currentPlayer));
 
 		if (this.check) {
@@ -112,6 +112,24 @@ public class ChessMatch {
 			nextTurn();
 		}
 		return (ChessPiece) capturedPiece;
+	}
+
+	public ChessPiece replacePromotedPiece(String type) {
+		type = type.toUpperCase();
+		ChessPiece newPiece = switch (type) {
+			case "B" -> new Bishop(board, promoted.getColor());
+			case "N" -> new Knight(board, promoted.getColor());
+			case "Q" -> new Queen(board, promoted.getColor());
+			case "R" -> new Rook(board, promoted.getColor());
+			default -> throw new IllegalArgumentException("Invalid type for promotion");
+		};
+		Position pos = (Position) promoted.getPosition().clone();
+		Piece p = board.removePiece(pos);
+		piecesOnTheBoard.remove(p);
+		board.placePiece(newPiece, pos);
+		piecesOnTheBoard.add(newPiece);
+		
+		return newPiece;
 	}
 
 	private Piece makeMove(Position source, Position target) {
@@ -186,25 +204,6 @@ public class ChessMatch {
 			}
 		}
 
-	}
-
-	public ChessPiece replacePromotedPiece(String type) {
-		type = type.toUpperCase();
-		if (this.promoted == null)
-			throw new IllegalStateException("There is no piece to be promoted");
-		ChessPiece newPiece = switch (type) {
-			case "B" -> new Bishop(board, promoted.getColor());
-			case "N" -> new Knight(board, promoted.getColor());
-			case "Q" -> new Queen(board, promoted.getColor());
-			case "R" -> new Rook(board, promoted.getColor());
-			default -> throw new IllegalArgumentException("Invalid type for promotion");
-		};
-		Position pos = (Position) promoted.getPosition().clone();
-		Piece p = board.removePiece(pos);
-		piecesOnTheBoard.remove(p);
-		board.placePiece(newPiece, pos);
-		piecesOnTheBoard.add(newPiece);
-		return newPiece;
 	}
 
 	private void validateSourcePosition(Position source) {

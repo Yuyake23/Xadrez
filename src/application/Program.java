@@ -11,11 +11,12 @@ import chess.ChessPiece;
 import chess.ChessPosition;
 
 public class Program {
-	public static void main(String[] args) {
 
-		Scanner sc = new Scanner(System.in);
-		ChessMatch chessMatch = new ChessMatch();
-		List<ChessPiece> capturedPieces = new ArrayList<>();
+	private static Scanner sc = new Scanner(System.in);
+	private static ChessMatch chessMatch = new ChessMatch();
+	private static List<ChessPiece> capturedPieces = new ArrayList<>();
+
+	public static void main(String[] args) {
 
 		while (!chessMatch.getCheckMate()) {
 			try {
@@ -38,22 +39,6 @@ public class Program {
 				if (capturedPiece != null)
 					capturedPieces.add(capturedPiece);
 
-				if (chessMatch.getPromoted() != null) {
-					while (true) {
-						try {
-//							UI.clearScreen();
-//							UI.printBoard(chessMatch.getPieces());
-							System.out.print("Enter piece for promotion (B/N/R/Q): ");
-							String type = sc.nextLine();
-							chessMatch.replacePromotedPiece(type);
-							break;
-						} catch (IllegalArgumentException e) {
-							System.out.println(e.getMessage());
-							sc.nextLine();
-						}
-					}
-				}
-
 			} catch (ChessException e) {
 				System.out.println(e.getMessage());
 				sc.nextLine();
@@ -64,5 +49,21 @@ public class Program {
 		}
 		UI.clearScreen();
 		UI.printMatch(chessMatch, capturedPieces);
+	}
+
+	public static void chosePieceType() {
+		while (true) {
+			try {
+				UI.clearScreen();
+				UI.printBoard(chessMatch.getPieces());
+				System.out.print("\nEnter piece for promotion (B/N/R/Q): ");
+				String type = sc.nextLine();
+				chessMatch.replacePromotedPiece(type);
+				break;
+			} catch (IllegalArgumentException e) {
+				System.out.println(e.getMessage());
+				sc.nextLine();
+			}
+		}
 	}
 }
