@@ -22,6 +22,7 @@ public class ChessMatch {
 	private boolean check; // is false by default
 	private boolean checkMate;
 	private ChessPiece enPassantVulnerable;
+	private ChessPiece promoted;
 
 	private List<Piece> piecesOnTheBoard = new ArrayList<>();
 	private List<Piece> capturedPieces = new ArrayList<>();
@@ -53,6 +54,10 @@ public class ChessMatch {
 		return enPassantVulnerable;
 	}
 
+	public ChessPiece getPromoted() {
+		return promoted;
+	}
+
 	public ChessPiece[][] getPieces() {
 		ChessPiece[][] chessPieces = new ChessPiece[board.getRows()][board.getColumns()];
 		for (int i = 0; i < board.getRows(); i++)
@@ -74,19 +79,28 @@ public class ChessMatch {
 		validateSourcePosition(source);
 		validateTargetPosition(source, target);
 		Piece capturedPiece = makeMove(source, target);
+		ChessPiece movedPiece = (ChessPiece) board.piece(target);
+		this.promoted = null;
 
 		if (testCheck(currentPlayer)) {
 			undoMove(source, target, capturedPiece);
 			throw new ChessException("You can't put yourself in check");
 		}
 
-		// #specialmove en passant
-		ChessPiece movedPiece = (ChessPiece) board.piece(target);
-		if (movedPiece instanceof Pawn
-				&& (source.getRow() - 2 == target.getRow() || source.getRow() + 2 == target.getRow())) {
-			this.enPassantVulnerable = movedPiece;
-		} else {
-			this.enPassantVulnerable = null;
+		if (movedPiece instanceof Pawn) {
+			// #specialmove en passant
+			if (source.getRow() - 2 == target.getRow() || source.getRow() + 2 == target.getRow()) {
+				this.enPassantVulnerable = movedPiece;
+			} else {
+				this.enPassantVulnerable = null;
+			}
+
+			// #specialmove promotion
+			if (target.getRow() == 0 || target.getRow() == 7) {
+				this.promoted = movedPiece;
+//				this.promoted = replacePromotedPiece("Q");
+				return (ChessPiece) capturedPiece;
+			}
 		}
 
 		this.check = testCheck(opponent(currentPlayer));
@@ -172,6 +186,25 @@ public class ChessMatch {
 			}
 		}
 
+	}
+
+	public ChessPiece replacePromotedPiece(String type) {
+		type = type.toUpperCase();
+		if (this.promoted == null)
+			throw new IllegalStateException("There is no piece to be promoted");
+		ChessPiece newPiece = switch (type) {
+			case "B" -> new Bishop(board, promoted.getColor());
+			case "N" -> new Knight(board, promoted.getColor());
+			case "Q" -> new Queen(board, promoted.getColor());
+			case "R" -> new Rook(board, promoted.getColor());
+			default -> throw new IllegalArgumentException("Invalid type for promotion");
+		};
+		Position pos = (Position) promoted.getPosition().clone();
+		Piece p = board.removePiece(pos);
+		piecesOnTheBoard.remove(p);
+		board.placePiece(newPiece, pos);
+		piecesOnTheBoard.add(newPiece);
+		return newPiece;
 	}
 
 	private void validateSourcePosition(Position source) {

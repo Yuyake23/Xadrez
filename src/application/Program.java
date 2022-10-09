@@ -31,14 +31,29 @@ public class Program {
 				UI.clearScreen();
 				UI.printBoard(chessMatch.getPieces(), possibleMovies);
 
-				System.out.print("Destino: ");
+				System.out.print("\nDestino: ");
 				target = UI.readChessPosition(sc);
 
-				System.out.println("indo fazer movimento");
 				capturedPiece = chessMatch.performChessMove(source, target);
-				System.out.println("movimento feito");
 				if (capturedPiece != null)
 					capturedPieces.add(capturedPiece);
+
+				if (chessMatch.getPromoted() != null) {
+					while (true) {
+						try {
+//							UI.clearScreen();
+//							UI.printBoard(chessMatch.getPieces());
+							System.out.print("Enter piece for promotion (B/N/R/Q): ");
+							String type = sc.nextLine();
+							chessMatch.replacePromotedPiece(type);
+							break;
+						} catch (IllegalArgumentException e) {
+							System.out.println(e.getMessage());
+							sc.nextLine();
+						}
+					}
+				}
+
 			} catch (ChessException e) {
 				System.out.println(e.getMessage());
 				sc.nextLine();
