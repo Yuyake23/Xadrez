@@ -51,19 +51,16 @@ public class Program {
 		UI.printMatch(chessMatch, capturedPieces);
 	}
 
-	public static void chosePieceType() {
+	public static String chosePieceType() {
 		while (true) {
-			try {
-				UI.clearScreen();
-				UI.printBoard(chessMatch.getPieces());
-				System.out.print("\nEnter piece for promotion (B/N/R/Q): ");
-				String type = sc.nextLine();
-				chessMatch.replacePromotedPiece(type);
-				break;
-			} catch (IllegalArgumentException e) {
-				System.out.println(e.getMessage());
-				sc.nextLine();
-			}
+			UI.clearScreen();
+			UI.printBoard(chessMatch.getPieces());
+			System.out.print("Enter piece for promotion (B/N/R/Q): ");
+			String type = sc.nextLine().toUpperCase();
+			if (type.length() == 1 && "BNQR".contains(type))
+				return type;
+			else
+				System.out.print("Invalid Type! ");
 		}
 	}
 }

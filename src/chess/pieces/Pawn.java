@@ -14,6 +14,13 @@ public class Pawn extends ChessPiece {
 		super(board, color);
 		this.chessMatch = chessMatch;
 	}
+	
+	@Override
+	public Pawn clone() {
+		Pawn pawn = new Pawn(this.getBoard(), this.getColor(), chessMatch);
+		pawn.moveCount = this.moveCount;
+		return pawn;
+	}
 
 	@Override
 	public String toString() {

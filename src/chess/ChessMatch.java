@@ -23,7 +23,6 @@ public class ChessMatch {
 	private boolean check; // is false by default
 	private boolean checkMate;
 	private ChessPiece enPassantVulnerable;
-	private ChessPiece promoted;
 
 	private List<Piece> piecesOnTheBoard = new ArrayList<>();
 	private List<Piece> capturedPieces = new ArrayList<>();
@@ -55,9 +54,9 @@ public class ChessMatch {
 		return enPassantVulnerable;
 	}
 
-	public ChessPiece getPromoted() {
-		return promoted;
-	}
+//	public ChessPiece getPromoted() {
+//		return promoted;
+//	}
 
 	public ChessPiece[][] getPieces() {
 		ChessPiece[][] chessPieces = new ChessPiece[board.getRows()][board.getColumns()];
@@ -81,28 +80,35 @@ public class ChessMatch {
 		validateTargetPosition(source, target);
 		Piece capturedPiece = makeMove(source, target);
 		ChessPiece movedPiece = (ChessPiece) board.piece(target);
-		this.promoted = null;
+
+		// #specialmove promotion
+		if (movedPiece instanceof Pawn pawn) {
+			if (target.getRow() == 0 || target.getRow() == 7) {
+				ChessPiece pawnBackup = pawn.clone();
+				String type = Program.chosePieceType(); // I don´t like it
+				movedPiece = replacePromotedPiece(movedPiece, type);
+				if (testCheck(currentPlayer)) {
+					undoMove(source, target, capturedPiece);
+					movedPiece = pawnBackup;
+					throw new ChessException("You can't put yourself in check");
+				}
+			}
+		}
 
 		if (testCheck(currentPlayer)) {
 			undoMove(source, target, capturedPiece);
 			throw new ChessException("You can't put yourself in check");
 		}
 
+		// #specialmove en passant
 		if (movedPiece instanceof Pawn) {
-			// #specialmove en passant
 			if (source.getRow() - 2 == target.getRow() || source.getRow() + 2 == target.getRow()) {
 				this.enPassantVulnerable = movedPiece;
 			} else {
 				this.enPassantVulnerable = null;
 			}
-
-			// #specialmove promotion
-			if (target.getRow() == 0 || target.getRow() == 7) {
-				this.promoted = movedPiece;
-				Program.chosePieceType(); // I don´t like it
-			}
 		}
-		
+
 		this.check = testCheck(opponent(currentPlayer));
 
 		if (this.check) {
@@ -114,21 +120,21 @@ public class ChessMatch {
 		return (ChessPiece) capturedPiece;
 	}
 
-	public ChessPiece replacePromotedPiece(String type) {
+	public ChessPiece replacePromotedPiece(ChessPiece piece, String type) {
 		type = type.toUpperCase();
 		ChessPiece newPiece = switch (type) {
-			case "B" -> new Bishop(board, promoted.getColor());
-			case "N" -> new Knight(board, promoted.getColor());
-			case "Q" -> new Queen(board, promoted.getColor());
-			case "R" -> new Rook(board, promoted.getColor());
+			case "B" -> new Bishop(board, piece.getColor());
+			case "N" -> new Knight(board, piece.getColor());
+			case "Q" -> new Queen(board, piece.getColor());
+			case "R" -> new Rook(board, piece.getColor());
 			default -> throw new IllegalArgumentException("Invalid type for promotion");
 		};
-		Position pos = (Position) promoted.getPosition().clone();
+		Position pos = (Position) piece.getPosition().clone();
 		Piece p = board.removePiece(pos);
 		piecesOnTheBoard.remove(p);
 		board.placePiece(newPiece, pos);
 		piecesOnTheBoard.add(newPiece);
-		
+
 		return newPiece;
 	}
 
