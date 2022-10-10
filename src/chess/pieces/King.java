@@ -8,11 +8,8 @@ import chess.Color;
 
 public class King extends ChessPiece {
 
-	private ChessMatch chessMatch;
-
-	public King(Board board, Color color, ChessMatch chessMatch) {
-		super(board, color);
-		this.chessMatch = chessMatch;
+	public King(Board board, ChessMatch chessMatch, Color color) {
+		super(board, chessMatch, color);
 	}
 
 	@Override
@@ -31,7 +28,7 @@ public class King extends ChessPiece {
 	}
 
 	@Override
-	public boolean[][] possibleMoves() {
+	public boolean[][] getAllPossibleMoves() {
 		boolean[][] pm = new boolean[getBoard().getRows()][getBoard().getColumns()];
 		Position p = new Position(0, 0);
 

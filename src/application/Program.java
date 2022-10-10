@@ -30,7 +30,7 @@ public class Program {
 
 				boolean possibleMovies[][] = chessMatch.possibleMovies(source);
 				UI.clearScreen();
-				UI.printBoard(chessMatch.getPieces(), possibleMovies);
+				UI.printBoard(chessMatch, possibleMovies);
 
 				System.out.print("\nDestino: ");
 				target = UI.readChessPosition(sc);
@@ -54,7 +54,7 @@ public class Program {
 	public static String chosePieceType() {
 		while (true) {
 			UI.clearScreen();
-			UI.printBoard(chessMatch.getPieces());
+			UI.printBoard(chessMatch);
 			System.out.print("Enter piece for promotion (B/N/R/Q): ");
 			String type = sc.nextLine().toUpperCase();
 			if (type.length() == 1 && "BNQR".contains(type))

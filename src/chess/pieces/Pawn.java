@@ -8,16 +8,13 @@ import chess.Color;
 
 public class Pawn extends ChessPiece {
 
-	private ChessMatch chessMatch;
-
-	public Pawn(Board board, Color color, ChessMatch chessMatch) {
-		super(board, color);
-		this.chessMatch = chessMatch;
+	public Pawn(Board board, ChessMatch chessMatch, Color color) {
+		super(board, chessMatch, color);
 	}
-	
+
 	@Override
 	public Pawn clone() {
-		Pawn pawn = new Pawn(this.getBoard(), this.getColor(), chessMatch);
+		Pawn pawn = new Pawn(this.getBoard(), chessMatch, this.getColor());
 		pawn.moveCount = this.moveCount;
 		return pawn;
 	}
@@ -28,7 +25,7 @@ public class Pawn extends ChessPiece {
 	}
 
 	@Override
-	public boolean[][] possibleMoves() {
+	public boolean[][] getAllPossibleMoves() {
 		boolean[][] pm = new boolean[getBoard().getRows()][getBoard().getColumns()];
 		Position p = new Position(0, this.position.getColumn());
 		// wildcard modifier it will be negative if the piece color is white and

@@ -1,12 +1,16 @@
 package boardgame;
 
+import chess.ChessMatch;
+
 public abstract class Piece {
 	protected Position position;
+	protected ChessMatch chessMatch;
 	private Board board;
 
-	public Piece(Board board) {
+	public Piece(Board board, ChessMatch chessMatch) {
 		this.board = board;
 		this.position = null;
+		this.chessMatch = chessMatch;
 	}
 
 	public Position getPosition() {
@@ -21,15 +25,21 @@ public abstract class Piece {
 		return board;
 	}
 
-	public abstract boolean[][] possibleMoves();
+	public abstract boolean[][] getAllPossibleMoves();
+	
+	public boolean[][] getPossibleMoves(){
+		boolean[][] pm = getAllPossibleMoves();
+		chessMatch.validadePossibleMoves(pm, position);
+		return pm;
+	}
 
 	// hook method
 	public boolean possibleMove(Position position) {
-		return possibleMoves()[position.getRow()][position.getColumn()];
+		return getAllPossibleMoves()[position.getRow()][position.getColumn()];
 	}
 
 	public boolean isThereAnyPossibleMove() {
-		boolean possibleMoves[][] = possibleMoves();
+		boolean possibleMoves[][] = getPossibleMoves();
 
 		for (int i = 0; i < possibleMoves.length; i++)
 			for (int j = 0; j < possibleMoves[0].length; j++)

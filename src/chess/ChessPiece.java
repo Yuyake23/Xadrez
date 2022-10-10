@@ -8,8 +8,8 @@ public abstract class ChessPiece extends Piece {
 	protected Color color;
 	protected int moveCount;
 
-	public ChessPiece(Board board, Color color) {
-		super(board);
+	public ChessPiece(Board board, ChessMatch chessMatch, Color color) {
+		super(board, chessMatch);
 		this.color = color;
 	}
 

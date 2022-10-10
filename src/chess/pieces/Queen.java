@@ -2,13 +2,14 @@ package chess.pieces;
 
 import boardgame.Board;
 import boardgame.Position;
+import chess.ChessMatch;
 import chess.ChessPiece;
 import chess.Color;
 
 public class Queen extends ChessPiece {
 
-	public Queen(Board board, Color color) {
-		super(board, color);
+	public Queen(Board board, ChessMatch chessMatch, Color color) {
+		super(board, chessMatch, color);
 	}
 
 	@Override
@@ -17,7 +18,7 @@ public class Queen extends ChessPiece {
 	}
 
 	@Override
-	public boolean[][] possibleMoves() {
+	public boolean[][] getAllPossibleMoves() {
 		boolean[][] pm = new boolean[getBoard().getRows()][getBoard().getColumns()];
 		Position p = new Position(0, 0);
 		// above
