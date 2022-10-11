@@ -101,7 +101,10 @@ public class ChessMatch {
 
 		if (testCheck(currentPlayer)) {
 			undoMove(source, target, capturedPiece);
-			throw new ChessException("You can't put yourself in check");
+			if (check)
+				throw new ChessException("You must defend your king");
+			else
+				throw new ChessException("You can't put yourself in check");
 		}
 
 		// #specialmove en passant
