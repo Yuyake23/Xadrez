@@ -27,6 +27,7 @@ public abstract class Piece {
 
 	public abstract boolean[][] getAllPossibleMoves();
 	
+	// hook method
 	public boolean[][] getPossibleMoves(){
 		boolean[][] pm = getAllPossibleMoves();
 		chessMatch.validadePossibleMoves(pm, position);

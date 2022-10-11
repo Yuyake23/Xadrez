@@ -98,9 +98,11 @@ public class UI {
 		if (piece == null) {
 			System.out.print('-');
 		} else {
-			System.out.print(getUIPieceColor(piece.getColor()));
 			if (piece instanceof King && chessMatch.testCheck(piece.getColor())) {
+				// if it's in check
 				System.out.print(ANSI_RED);
+			} else {
+				System.out.print(getUIPieceColor(piece.getColor()));
 			}
 			System.out.print(piece);
 		}
