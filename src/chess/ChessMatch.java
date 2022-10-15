@@ -34,6 +34,14 @@ public class ChessMatch {
 		initialSetup();
 	}
 
+	public int getColumns() {
+		return board.getColumns();
+	}
+
+	public int getRows() {
+		return board.getRows();
+	}
+
 	public int getTurn() {
 		return turn;
 	}
@@ -245,14 +253,14 @@ public class ChessMatch {
 		return color == Color.WHITE ? Color.BLACK : Color.WHITE;
 	}
 
-	private ChessPiece king(Color color) {
+	private King king(Color color) {
 		for (Piece piece : this.piecesOnTheBoard) {
 			if (((ChessPiece) piece).getColor() == color && piece instanceof King king) {
 				return king;
 			}
 		}
 		throw new IllegalStateException(
-				"There is no " + UI.getUIPieceColor(color) + color + UI.ANSI_RESET + " king on the board");
+				"There is no " + UI.getUIColor(color, UI.FontType.PLAIN) + color + UI.RESET + " king on the board");
 	}
 
 	public void validadePossibleMoves(boolean[][] pm, Position source) {
@@ -274,9 +282,13 @@ public class ChessMatch {
 	}
 
 	public boolean testCheck(Color color) {
-		Position kingPosition = king(color).getPosition();
-		List<Piece> opponentPieces = piecesOnTheBoard.stream().filter(p -> ((ChessPiece) p).getColor() != color)
-				.collect(Collectors.toList());
+		return testCheck(king(color));
+	}
+
+	public boolean testCheck(King king) {
+		Position kingPosition = king.getPosition();
+		List<Piece> opponentPieces = piecesOnTheBoard.stream()
+				.filter(p -> ((ChessPiece) p).getColor() != king.getColor()).collect(Collectors.toList());
 		for (Piece opponentPiece : opponentPieces) {
 			if (opponentPiece.getAllPossibleMoves()[kingPosition.getRow()][kingPosition.getColumn()]) {
 				return true;
