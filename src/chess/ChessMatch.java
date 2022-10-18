@@ -9,6 +9,7 @@ import application.UI;
 import boardgame.Board;
 import boardgame.Piece;
 import boardgame.Position;
+import chess.exceptions.ChessException;
 import chess.pieces.Bishop;
 import chess.pieces.King;
 import chess.pieces.Knight;
@@ -116,12 +117,11 @@ public class ChessMatch {
 		}
 
 		// #specialmove en passant
-		if (movedPiece instanceof Pawn) {
-			if (source.getRow() - 2 == target.getRow() || source.getRow() + 2 == target.getRow()) {
-				this.enPassantVulnerable = movedPiece;
-			} else {
-				this.enPassantVulnerable = null;
-			}
+		if (movedPiece instanceof Pawn
+				&& (source.getRow() - 2 == target.getRow() || source.getRow() + 2 == target.getRow())) {
+			this.enPassantVulnerable = movedPiece;
+		} else {
+			this.enPassantVulnerable = null;
 		}
 
 		this.check = testCheck(opponent(currentPlayer));
@@ -219,7 +219,7 @@ public class ChessMatch {
 			if ((pawn.getColor() == Color.WHITE && pawn.getPosition().getRow() == 3)
 					|| (pawn.getColor() == Color.BLACK && pawn.getPosition().getRow() == 4)) {
 				pawn = (Pawn) board.removePiece(target);
-				
+
 				if (piece.getColor() == Color.WHITE) {
 					board.placePiece(pawn, new Position(3, target.getColumn()));
 				} else {

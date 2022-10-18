@@ -209,8 +209,10 @@ public class UI {
 		if (piece == null) {
 			System.out.print("-");
 		} else {
-			if (chessMatch.testCheck(piece.getColor()) && piece.isThereAnyPossibleMove()) {
-				System.out.print(piece instanceof King ? RED_UNDERLINED : getUIColor(piece.getColor(), FontType.UNDERLINED));
+			if (chessMatch.testCheck(piece.getColor()) && piece.isThereAnyPossibleMove()
+					&& !chessMatch.getCheckMate()) {
+				System.out.print(
+						piece instanceof King ? RED_UNDERLINED : getUIColor(piece.getColor(), FontType.UNDERLINED));
 			}
 			if (piece instanceof King k && chessMatch.testCheck(k)) {
 				// if it's in check
@@ -230,8 +232,10 @@ public class UI {
 				.collect(Collectors.toList());
 
 		System.out.println("Captured pieces:");
-		System.out.println("White: " + getUIColor(Color.WHITE, FontType.PLAIN) + Arrays.toString(whites.toArray()) + RESET);
-		System.out.println("Black: " + getUIColor(Color.BLACK, FontType.PLAIN) + Arrays.toString(blacks.toArray()) + RESET);
+		System.out.println(
+				"White: " + getUIColor(Color.WHITE, FontType.PLAIN) + Arrays.toString(whites.toArray()) + RESET);
+		System.out.println(
+				"Black: " + getUIColor(Color.BLACK, FontType.PLAIN) + Arrays.toString(blacks.toArray()) + RESET);
 	}
 
 	public static String getUIColor(Color color, FontType type) {
